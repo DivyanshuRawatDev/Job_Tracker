@@ -6,10 +6,10 @@ const userSchema = mongoose.Schema(
     email: { type: String, required: true },
     password: { type: String, required: true },
     profilePic: { type: String},
-    companies: { type: Schema.Types.ObjectId, ref: "Company" },
+    companies: [{ type: Schema.Types.ObjectId, ref: "Company" }],
   },
   {
-    Timestamp: true,
+    timestamps: true,
   }
 );
 
