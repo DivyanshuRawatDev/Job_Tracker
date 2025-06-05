@@ -11,8 +11,8 @@ function App() {
     <>
       <div className="container">
         <Routes>
-          <Route path="/" element={<Navigate to="/google" />} />
           <Route path="/google" element={<Auth />} />
+          <Route path="/" element={<Navigate to="/google" replace />} />
           <Route
             path="/dashboard"
             element={
