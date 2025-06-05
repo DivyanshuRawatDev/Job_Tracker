@@ -1,6 +1,7 @@
 const { UserModel } = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { admin } = require("../utils/firebase");
 
 const userSignup = async (req, res) => {
   try {
@@ -72,4 +73,51 @@ const userLogin = async (req, res) => {
   }
 };
 
-module.exports = { userSignup, userLogin };
+const googleAuthLogin = async (req, res) => {
+  try {
+    const { idToken } = req.body;
+
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const { uid, email, name, picture } = decodedToken;
+
+    let user = await UserModel.findOne({ email });
+
+    if (!user) {
+      user = new UserModel({
+        name: name,
+        email: email,
+        profilePic: picture,
+      });
+
+      await user.save();
+    }
+
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+  
+
+    return res.status(200).json({
+      message: user ? "User logged in" : "User signed up",
+      data: user,
+    });
+  } catch (error) {
+    console.log("Error while google auth : " + error.message);
+  }
+};
+
+const authVerify = async (req, res) => {
+  try {
+    return res.status(200).json({ message: "Verified", user: req.userId });
+  } catch (error) {
+    console.log("Error while auth verification : " + error.message);
+  }
+};
+
+module.exports = { userSignup, userLogin, googleAuthLogin, authVerify };
