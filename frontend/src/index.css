@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+body{
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  font-family: "Roboto Mono", monospace;
+}
+
+.container{
+  max-width:1250px ;
+  background-color: rgba(230, 235, 233, 0.57);
+  margin: auto;
+  height: 100vh;
+}
