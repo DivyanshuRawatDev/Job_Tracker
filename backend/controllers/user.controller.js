@@ -98,7 +98,9 @@ const googleAuthLogin = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      secure: true,
+      sameSite: "None",
+      maxAge: 1000 * 60 * 60 * 24,
     });
 
   
