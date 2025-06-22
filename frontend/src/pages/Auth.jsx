@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import authImage from "../assets/auth.png";
 import googleLogo from "../assets/google.svg";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchGoogleAuth } from "../redux/slices/userSlice";
 import { useNavigate } from "react-router";
 import API from "../utils/axios";
@@ -10,6 +10,8 @@ const Auth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isVerified, setIsVerified] = useState(null);
+  const { isLoading } = useSelector((store) => store.user);
+  console.log(isLoading, "load");
   const handleGoogleLogin = async () => {
     try {
       const result = await dispatch(fetchGoogleAuth()).unwrap();
@@ -58,10 +60,43 @@ const Auth = () => {
 
         <button
           onClick={handleGoogleLogin}
-          className="bg-white flex items-center gap-3 p-4 rounded-md border border-gray-300 shadow-sm hover:shadow-md hover:cursor-pointer transition"
+          disabled={isLoading}
+          className={`bg-white flex items-center gap-3 p-4 rounded-md border border-gray-300 shadow-sm transition ${
+            isLoading
+              ? "cursor-not-allowed opacity-60"
+              : "hover:shadow-md hover:cursor-pointer"
+          }`}
         >
-          <img src={googleLogo} alt="Google" className="w-6 h-6" />
-          <p className="text-gray-700 font-medium">Sign in with Google</p>
+          {isLoading ? (
+            <>
+              <svg
+                className="animate-spin h-5 w-5 text-gray-600"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8H4z"
+                />
+              </svg>
+              <p className="text-gray-700 font-medium">Signing in...</p>
+            </>
+          ) : (
+            <>
+              <img src={googleLogo} alt="Google" className="w-6 h-6" />
+              <p className="text-gray-700 font-medium">Sign in with Google</p>
+            </>
+          )}
         </button>
       </div>
     </div>
