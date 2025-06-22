@@ -103,8 +103,6 @@ const googleAuthLogin = async (req, res) => {
       maxAge: 1000 * 60 * 60 * 24,
     });
 
-  
-
     return res.status(200).json({
       message: user ? "User logged in" : "User signed up",
       data: user,
@@ -122,4 +120,22 @@ const authVerify = async (req, res) => {
   }
 };
 
-module.exports = { userSignup, userLogin, googleAuthLogin, authVerify };
+const userLogout = async (req, res) => {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      sameSite: true,
+    });
+    return res.json({ message: "Logout successful" });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+module.exports = {
+  userSignup,
+  userLogin,
+  googleAuthLogin,
+  authVerify,
+  userLogout,
+};

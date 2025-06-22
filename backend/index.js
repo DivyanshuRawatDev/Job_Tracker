@@ -9,6 +9,7 @@ const { authorization } = require("./middlewares/authorization");
 
 const app = express();
 app.use(cors({  origin: "https://job-tracker-xlbc.vercel.app", credentials: true }));
+// app.use(cors({  origin: "http://localhost:5173", credentials: true }));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -26,7 +27,7 @@ const PORT = process.env.PORT || 3000;
 
 connection()
   .then(() => {
-    app.listen(PORT, () => {
+    app.listen(PORT,() => {
       console.log("server is running on port : " + PORT);
     });
   })
