@@ -23,14 +23,20 @@ const Auth = () => {
   };
 
   useEffect(() => {
-    API.get("/auth/verify", { withCredentials: true })
-      .then(() => {
-        setIsVerified(true);
-        navigate("/dashboard");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    const checkAuth = async () => {
+      try {
+        const res = await API.get("/auth/verify", { withCredentials: true });
+        if (res?.data?.user) {
+          setIsVerified(true);
+          setTimeout(() => navigate("/dashboard"), 100);
+        }
+      } catch (err) {
+        console.log("Not logged in yet.", err);
+        setIsVerified(false);
+      }
+    };
+
+    checkAuth();
   }, []);
 
   return (
