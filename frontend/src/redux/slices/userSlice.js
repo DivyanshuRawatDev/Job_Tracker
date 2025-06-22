@@ -23,6 +23,18 @@ export const fetchGoogleAuth = createAsyncThunk(
   }
 );
 
+export const fetchUserLogout = createAsyncThunk(
+  "auth/logout",
+  async function (req, res) {
+    try {
+      const response = await API.get("auth/logout");
+      return response.data;
+    } catch (error) {
+      console.log("Error while fetch google Auth : " + error.message);
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -43,6 +55,21 @@ const userSlice = createSlice({
     });
 
     builder.addCase(fetchGoogleAuth.rejected, (state) => {
+      state.isLoading = false;
+      state.isError = true;
+    });
+
+    // Logout
+    builder.addCase(fetchUserLogout.pending, (state) => {
+      state.isLoading = true;
+      state.isError = false;
+    });
+    builder.addCase(fetchUserLogout.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.user = {};
+    });
+
+    builder.addCase(fetchUserLogout.rejected, (state) => {
       state.isLoading = false;
       state.isError = true;
     });

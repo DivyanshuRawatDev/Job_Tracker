@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import authImage from "../assets/auth.png";
 import googleLogo from "../assets/google.svg";
 import { useDispatch } from "react-redux";
 import { fetchGoogleAuth } from "../redux/slices/userSlice";
 import { useNavigate } from "react-router";
+import API from "../utils/axios";
 
 const Auth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isVerified, setIsVerified] = useState(null);
   const handleGoogleLogin = async () => {
     try {
       const result = await dispatch(fetchGoogleAuth()).unwrap();
@@ -16,22 +18,31 @@ const Auth = () => {
     } catch (error) {
       console.error("Login failed:", error);
     }
-
-   
   };
 
+  useEffect(() => {
+    API.get("/auth/verify", { withCredentials: true })
+      .then(() => {
+        setIsVerified(true);
+        navigate("/dashboard");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   return (
-    <div className="flex h-screen items-stretch">
+    <div className="flex flex-col md:flex-row h-screen items-stretch">
       {/* Left Image Section */}
-      <div className="w-1/2 flex justify-center items-center">
+      <div className=" md:w-1/2 flex justify-center items-center">
         <img className="w-full" src={authImage} alt="Auth-Image" />
       </div>
 
       {/* Vertical Line */}
-      <div className="w-[1px] bg-gray-300 h-[90vh] flex m-auto" />
+      <div className="md:w-[1px] bg-gray-300 h-0.5 md:h-[90vh] flex  m-10 md:m-auto" />
 
       {/* Right Login Section */}
-      <div className="w-1/2 flex flex-col gap-8 justify-center items-center px-8">
+      <div className="md:w-1/2 flex flex-col gap-8 justify-center items-center px-8">
         <div className="text-center">
           <h2 className="text-4xl font-extrabold">WELCOME</h2>
           <h1 className="text-4xl font-extrabold">JOB SEEKER</h1>
