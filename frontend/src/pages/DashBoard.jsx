@@ -5,6 +5,7 @@ import { fetchAllCompanies } from "../redux/slices/companySlice";
 import CompanyAdd from "../components/dashboard/CompanyAdd";
 import { fetchUserLogout } from "../redux/slices/userSlice";
 import { useNavigate } from "react-router";
+import ChatImage from "../assets/chat.svg";
 
 const DashBoard = () => {
   const dispatch = useDispatch();
@@ -46,30 +47,45 @@ const DashBoard = () => {
   };
 
   return (
-    <div className="bg-violet-300 h-screen">
+    <div className="bg-[#06923E] h-screen">
       <div className="flex justify-between items-center p-5">
         <h1 className="font-extrabold  text-3xl">JOB TRACKER</h1>
-        <div className="relative">
-          <img
-            onClick={handleLogoutBtn}
-            src={user?.profilePic}
-            className="rounded-full cursor-pointer w-12 h-12"
-          />
-          {showLogout ? (
-            <p
-              onClick={handleLogout}
-              className="bg-orange-600 p-2 rounded-xl font-medium absolute left-[-5px]  cursor-pointer"
-            >
-              LOGOUT
-            </p>
-          ) : null}
+        <div className="flex items-center gap-5">
+          <div
+            className="cursor-pointer"
+            onClick={() => {
+              navigate("/chat");
+            }}
+          >
+            <img src={ChatImage} width={35} alt="chat" />
+          </div>
+          <div className="relative">
+            <img
+              onClick={handleLogoutBtn}
+              src={
+                user?.profilePic 
+              }
+              className="rounded-full cursor-pointer w-12 h-12"
+              onError={(e) => {
+                e.target.src = "https://freesvg.org/img/abstract-user-flat-4.png";
+              }}
+            />
+            {showLogout ? (
+              <p
+                onClick={handleLogout}
+                className="bg-orange-600 p-2 rounded-xl font-medium absolute left-[-5px]  cursor-pointer"
+              >
+                LOGOUT
+              </p>
+            ) : null}
+          </div>
         </div>
       </div>
 
-      <div className="bg-yellow-200 p-5 flex flex-col-reverse md:flex-row gap-4">
+      <div className="bg-yellow-50 p-5  flex flex-col-reverse md:flex-row gap-4">
         {/* left side */}
-        <div className="bg-pme-300 md:w-[65%] h-[80vh] rounded-2xl">
-          <div className="flex items-center justify-center bg-red-200 py-4 px-6">
+        <div className="bg-pme-300 shadow-xl   md:w-[65%] h-[80vh] rounded-2xl">
+          <div className="flex  items-center justify-center bg-red-100 py-4 px-6">
             <div className="flex w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-md">
               <input
                 type="text"
@@ -117,8 +133,8 @@ const DashBoard = () => {
           </div>
         </div>
         {/* Right side */}
-        <div className="bg-sky-200 md:w-[35%] flex flex-col gap-7 p-3 rounded-2xl">
-          <div className="bg-green-400 rounded-lg">
+        <div className="shadow-xl bg-white md:w-[35%] flex flex-col gap-7 p-3 rounded-2xl">
+          <div className="bg-green-300 rounded-lg">
             <h1
               onClick={handleShowAddCompany}
               className="text-2xl text-center cursor-pointer  p-5 font-medium"
@@ -133,7 +149,7 @@ const DashBoard = () => {
           )}
 
           <div className=" md:block hidden">
-          <CompanyAdd />
+            <CompanyAdd />
           </div>
         </div>
       </div>

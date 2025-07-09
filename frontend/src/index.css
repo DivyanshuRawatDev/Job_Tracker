@@ -5,6 +5,7 @@ body{
   padding: 0px;
   box-sizing: border-box;
   font-family: "Roboto Mono", monospace;
+  
 }
 
 .container{
@@ -12,4 +13,7 @@ body{
   background-color: rgba(230, 235, 233, 0.57);
   margin: auto;
   height: 100%;
+  
+
+
 }

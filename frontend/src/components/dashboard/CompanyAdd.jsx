@@ -36,7 +36,7 @@ const CompanyAdd = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-5 bg-white shadow-md rounded-lg space-y-4">
+    <div className="max-w-md mx-auto p-5 bg-white  rounded-lg space-y-4">
       <input
         type="text"
         onChange={handleValueChange}

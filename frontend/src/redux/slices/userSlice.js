@@ -9,6 +9,7 @@ export const fetchGoogleAuth = createAsyncThunk(
     try {
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
+      console.log(idToken,"token")
 
       const response = await API.post("auth/google", {
         idToken,

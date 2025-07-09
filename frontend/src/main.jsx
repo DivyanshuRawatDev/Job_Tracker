@@ -10,13 +10,11 @@ import { PersistGate } from "redux-persist/integration/react";
 console.log("Testing console log from main.jsx");
 
 createRoot(document.getElementById("root")).render(
-
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </PersistGate>
-    </Provider>
-
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </PersistGate>
+  </Provider>
 );
