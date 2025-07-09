@@ -10,7 +10,7 @@ const initilizedSocket = (server) => {
       credentials: true,
       origin: [
         "http://localhost:5173",
-        "https://job-tracker-xlbc.vercel.app/"
+        "https://job-tracker-xlbc.vercel.app"
       ],
     },
   });

@@ -15,7 +15,12 @@ const { initilizedSocket } = require("./socket/socket");
 const app = express();
 const server = http.createServer(app);
 // app.use(cors({  origin: "https://job-tracker-xlbc.vercel.app", credentials: true }));
-app.use(cors({ origin: ["http://localhost:5173","https://job-tracker-xlbc.vercel.app/"], credentials: true }));
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://job-tracker-xlbc.vercel.app"],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(cookieParser());
