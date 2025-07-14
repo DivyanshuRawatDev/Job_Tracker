@@ -5,9 +5,9 @@ const { admin } = require("../utils/firebase");
 
 const userSignup = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, gender } = req.body;
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !gender) {
       return res.status(400).json({ message: "Please fill all the fields" });
     }
 
@@ -20,14 +20,23 @@ const userSignup = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 8);
-    console.log(hashedPassword)
+    console.log(hashedPassword);
+    let profilePic;
+    if (gender === "male") {
+      profilePic = "https://cdn-icons-png.freepik.com/256/6997/6997484.png";
+    } else {
+      profilePic =
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD2DTMJ8c7OjQabbW3c-qqikkhN_K216qf-Q&s";
+    }
 
     const newUser = await UserModel.create({
       name,
       email,
       password: hashedPassword,
+      gender,
+      profilePic
     });
-    console.log(newUser)
+    console.log(newUser);
 
     return res
       .status(201)
@@ -53,7 +62,9 @@ const userLogin = async (req, res) => {
     if (!user.password) {
       return res
         .status(400)
-        .json({ message: "This user signed up with Google. Please use Google Login." });
+        .json({
+          message: "This user signed up with Google. Please use Google Login.",
+        });
     }
 
     const decodedPassword = await bcrypt.compare(password, user.password);
@@ -134,8 +145,8 @@ const userLogout = async (req, res) => {
   try {
     res.clearCookie("token", {
       httpOnly: true,
-      secure: true,       
-      sameSite: "None",   
+      secure: true,
+      sameSite: "None",
     });
     return res.json({ message: "Logout successful" });
   } catch (error) {

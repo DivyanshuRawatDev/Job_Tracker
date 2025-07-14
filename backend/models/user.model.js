@@ -6,8 +6,9 @@ const userSchema = mongoose.Schema(
     email: { type: String, required: true },
     password: {
       type: String,
-      required: false, 
+      required: false,
     },
+    gender: { type: String, enum: ["male", "female"], required: false },
     profilePic: {
       type: String,
       default:
