@@ -138,7 +138,7 @@ const SideBarChat = ({ selectedUser }) => {
       {/* chat bubble */}
 
       <div
-        className="bg-green-50 relative h-[77%] p-3 overflow-x-auto "
+        className="bg-green-50 relative h-[77%] p-3 overflow-y-auto "
         ref={chatContainerRef}
       >
         {!selectedUser && (
