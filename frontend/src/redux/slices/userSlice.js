@@ -2,14 +2,17 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import API from "../../utils/axios";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../../utils/firebase";
+import { setPersistence, browserLocalPersistence } from "firebase/auth";
 
 export const fetchGoogleAuth = createAsyncThunk(
   "auth/google",
   async function () {
     try {
+      await setPersistence(auth, browserLocalPersistence);
+
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
-      console.log(idToken,"token")
+      console.log(idToken, "token");
 
       const response = await API.post("auth/google", {
         idToken,
