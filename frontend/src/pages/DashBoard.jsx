@@ -7,6 +7,7 @@ import { fetchUserLogout } from "../redux/slices/userSlice";
 import { useNavigate } from "react-router";
 import ChatImage from "../assets/chat.svg";
 
+
 const DashBoard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -27,6 +28,8 @@ const DashBoard = () => {
     dispatch(fetchAllCompanies());
   }, []);
 
+  
+
   const handleLogoutBtn = () => {
     setShowlogout(!showLogout);
   };
@@ -41,6 +44,8 @@ const DashBoard = () => {
         console.log(err.message);
       });
   };
+
+  
 
   const handleShowAddCompany = () => {
     setShowAddCompany(!showAddCompany);
@@ -62,12 +67,11 @@ const DashBoard = () => {
           <div className="relative">
             <img
               onClick={handleLogoutBtn}
-              src={
-                user?.profilePic 
-              }
+              src={user?.profilePic}
               className="rounded-full cursor-pointer w-12 h-12"
               onError={(e) => {
-                e.target.src = "https://freesvg.org/img/abstract-user-flat-4.png";
+                e.target.src =
+                  "https://freesvg.org/img/abstract-user-flat-4.png";
               }}
             />
             {showLogout ? (

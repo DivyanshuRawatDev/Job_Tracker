@@ -2,12 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import ChatBubble from "./ChatBubble";
 import { useSelector } from "react-redux";
 import API from "../../utils/axios";
-import socket, { joinRoom } from "../../utils/socket";
+import { joinRoom, socket } from "../../utils/socket";
+
+import  TypingGif from "../../assets/typing.gif"
 
 const SideBarChat = ({ selectedUser }) => {
   const { user } = useSelector((store) => store.user);
   const [conversation, setConversation] = useState([]);
   const [message, setMessage] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
   const chatContainerRef = useRef(null);
 
   useEffect(() => {
@@ -70,6 +73,45 @@ const SideBarChat = ({ selectedUser }) => {
     }
   };
 
+  //typing function
+  let timer;
+  const debounceStopTyping = () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      socket.emit("stopTyping", {
+        roomID: conversation.conversation._id,
+        senderID: user._id,
+      });
+    }, 1500);
+  };
+
+  const handleTyping = () => {
+    socket.emit("typing", {
+      roomID: conversation.conversation._id,
+      senderID: user._id,
+    });
+    debounceStopTyping();
+  };
+
+  useEffect(() => {
+    socket.on("typing", ({ senderID }) => {
+      if (senderID === selectedUser._id) {
+        setIsTyping(true);
+      }
+    });
+
+    socket.on("stopTyping", ({ senderID }) => {
+      if (senderID === selectedUser._id) {
+        setIsTyping(false);
+      }
+    });
+
+    return () => {
+      socket.off("typing");
+      socket.off("stopTyping");
+    };
+  }, [selectedUser._id]);
+
   return (
     <div className="flex flex-col p-1 bg-blue-100  h-full">
       <div className="bg-green-400 h-[10%] flex items-center gap-5 p-1">
@@ -107,6 +149,9 @@ const SideBarChat = ({ selectedUser }) => {
               />
             );
           })}
+        {isTyping && (
+          <img src={TypingGif} width={60} alt="typing..."/>
+        )}
       </div>
       {/* chat input */}
       <div className="bg-green-400 h-[13%] p-2 flex flex-col justify-center w-full">
@@ -118,6 +163,7 @@ const SideBarChat = ({ selectedUser }) => {
             value={message}
             onChange={(e) => {
               setMessage(e.target.value);
+              handleTyping();
             }}
           />
           <button

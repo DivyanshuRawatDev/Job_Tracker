@@ -5,17 +5,36 @@ import DashboardImage from "../assets/dashboard.svg";
 import ChatBox from "../components/chat/ChatBox";
 import SideBarChat from "../components/chat/SideBarChat";
 import { fetchAllUsersWithoutCurrentUser } from "../redux/slices/conversationSlice";
+import { connectSocket, socket } from "../utils/socket";
 
 const Chat = () => {
   const [selectedUser, setSelectedUser] = useState("");
   const conversation = useSelector((store) => store.conversation);
+  const { user } = useSelector((store) => store.user);
+  const [onlineUsers, setOnlineUsers] = useState({});
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (user._id) {
+      connectSocket(user._id);
+    }
+
+    socket.on("getOnlineUsers", (users) => {
+      console.log("Online Users : " + JSON.stringify(users));
+      setOnlineUsers(users);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [user._id]);
+
+  useEffect(() => {
     dispatch(fetchAllUsersWithoutCurrentUser());
   }, []);
+
   console.log(selectedUser);
   return (
     <div className="bg-amber-100">
@@ -40,6 +59,7 @@ const Chat = () => {
                 <ChatBox
                   setSelectedUser={setSelectedUser}
                   selectedUser={selectedUser}
+                  onlineUsers={onlineUsers}
                   key={item._id}
                   user={item}
                 />
