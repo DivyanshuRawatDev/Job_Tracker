@@ -22,11 +22,11 @@ const userSignup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 8);
     console.log(hashedPassword);
     let profilePic;
+    const randomNum = Math.floor(Math.random() * 1000);
     if (gender === "male") {
-      profilePic = "https://cdn-icons-png.freepik.com/256/6997/6997484.png";
+      profilePic = `https://avatar.iran.liara.run/public/boy?${randomNum}`;
     } else {
-      profilePic =
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD2DTMJ8c7OjQabbW3c-qqikkhN_K216qf-Q&s";
+      profilePic = `https://avatar.iran.liara.run/public/girl?${randomNum}`;
     }
 
     const newUser = await UserModel.create({
@@ -34,7 +34,7 @@ const userSignup = async (req, res) => {
       email,
       password: hashedPassword,
       gender,
-      profilePic
+      profilePic,
     });
     console.log(newUser);
 
@@ -60,11 +60,9 @@ const userLogin = async (req, res) => {
     }
 
     if (!user.password) {
-      return res
-        .status(400)
-        .json({
-          message: "This user signed up with Google. Please use Google Login.",
-        });
+      return res.status(400).json({
+        message: "This user signed up with Google. Please use Google Login.",
+      });
     }
 
     const decodedPassword = await bcrypt.compare(password, user.password);
