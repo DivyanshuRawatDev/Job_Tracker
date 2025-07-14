@@ -20,12 +20,14 @@ const userSignup = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 8);
+    console.log(hashedPassword)
 
     const newUser = await UserModel.create({
       name,
       email,
       password: hashedPassword,
     });
+    console.log(newUser)
 
     return res
       .status(201)
@@ -46,6 +48,12 @@ const userLogin = async (req, res) => {
 
     if (!user) {
       res.status(400).json({ message: "Wrong credentials" });
+    }
+
+    if (!user.password) {
+      return res
+        .status(400)
+        .json({ message: "This user signed up with Google. Please use Google Login." });
     }
 
     const decodedPassword = await bcrypt.compare(password, user.password);
