@@ -1,12 +1,18 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchUserSignup } from "../../redux/slices/userSlice";
 import { useNavigate } from "react-router";
 
 const Signup = () => {
-  const [form, setForm] = useState({ name: "", email: "", password: "" ,gender: ""});
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    gender: "",
+  });
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { isLoadingSignup } = useSelector((store) => store.user);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -81,10 +87,38 @@ const Signup = () => {
 
       <button
         type="submit"
-        className="bg-green-600 text-white py-2 rounded hover:bg-green-700"
+        disabled={isLoadingSignup}
+        className={`bg-green-600 cursor-pointer text-white py-2 rounded flex items-center justify-center gap-2 transition ${
+          isLoadingSignup
+            ? "opacity-60 cursor-not-allowed"
+            : "hover:bg-green-700"
+        }`}
       >
-        Sign Up
+        {isLoadingSignup && (
+          <svg
+            className="animate-spin h-5 w-5 text-white"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v8H4z"
+            />
+          </svg>
+        )}
+        {isLoadingSignup ? "Signing Up..." : "Sign Up"}
       </button>
+
       <p>
         Already have an account?{" "}
         <span

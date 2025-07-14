@@ -73,7 +73,9 @@ export const fetchUserLogout = createAsyncThunk(
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    isLoading: false,
+    isLoadingGoogle: false,
+    isLoadingSignup: false,
+    isLoadingLogin:false,
     isError: false,
     user: {},
   },
@@ -81,30 +83,30 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     //google auth
     builder.addCase(fetchGoogleAuth.pending, (state) => {
-      state.isLoading = true;
+      state.isLoadingGoogle = true;
       state.isError = false;
     });
     builder.addCase(fetchGoogleAuth.fulfilled, (state, action) => {
-      state.isLoading = false;
+      state.isLoadingGoogle = false;
       state.user = action.payload?.data;
     });
 
     builder.addCase(fetchGoogleAuth.rejected, (state) => {
-      state.isLoading = false;
+      state.isLoadingGoogle = false;
       state.isError = true;
     });
 
     // Signup
     builder.addCase(fetchUserSignup.pending, (state) => {
-      state.isLoading = true;
+      state.isLoadingSignup = true;
       state.isError = false;
     });
     builder.addCase(fetchUserSignup.fulfilled, (state) => {
-      state.isLoading = false;
+      state.isLoadingSignup = false;
       // state.user = action.payload.data;
     });
     builder.addCase(fetchUserSignup.rejected, (state) => {
-      state.isLoading = false;
+      state.isLoadingSignup = false;
       state.isError = true;
     });
 

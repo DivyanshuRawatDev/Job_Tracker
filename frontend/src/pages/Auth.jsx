@@ -15,8 +15,8 @@ const Auth = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isVerified, setIsVerified] = useState(null);
-  const { isLoading } = useSelector((store) => store.user);
-  console.log(isLoading, "load");
+  const { isLoadingGoogle } = useSelector((store) => store.user);
+ 
 
   const handleGoogleLogin = async () => {
     try {
@@ -86,14 +86,14 @@ const Auth = () => {
         {/* Google Login Button */}
         <button
           onClick={handleGoogleLogin}
-          disabled={isLoading}
+          disabled={isLoadingGoogle}
           className={`bg-white flex items-center gap-3 p-4 rounded-md border border-gray-300 shadow-sm transition ${
-            isLoading
+            isLoadingGoogle
               ? "cursor-not-allowed opacity-60"
               : "hover:shadow-md hover:cursor-pointer"
           }`}
         >
-          {isLoading ? (
+          {isLoadingGoogle ? (
             <>
               <svg
                 className="animate-spin h-5 w-5 text-gray-600"
