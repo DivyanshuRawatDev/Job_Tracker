@@ -8,19 +8,32 @@ const initilizedSocket = (server) => {
   io = new Server(server, {
     cors: {
       credentials: true,
-      origin: [
-        "http://localhost:5173",
-        "https://job-tracker-xlbc.vercel.app"
-      ],
+      origin: ["http://localhost:5173", "https://job-tracker-xlbc.vercel.app"],
     },
   });
+
+  let onlineUsers = {};
 
   io.on("connection", (socket) => {
     console.log("Socket connected:", socket.id);
 
-    socket.on("joinRoom", ({roomID}) => {
+    socket.on("joinRoom", ({ roomID }) => {
       socket.join(roomID);
       console.log(`${socket.id} joined room: ${roomID}`);
+    });
+
+    socket.on("addUser", (userID) => {
+      onlineUsers[userID] = socket.id;
+      console.log("Online users:", onlineUsers);
+      io.emit("getOnlineUsers", onlineUsers);
+    });
+
+    socket.on("typing", ({ roomID, senderID }) => {
+      socket.to(roomID).emit("typing", { senderID });
+    });
+
+    socket.on("stopTyping", ({ roomID, senderID }) => {
+      socket.to(roomID).emit("stopTyping", { senderID });
     });
 
     socket.on("disconnect", () => {
