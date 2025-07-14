@@ -12,7 +12,7 @@ const PrivateRoute = ({ children }) => {
   }, []);
 
   if (isVerified === null) return <div>Loading...</div>;
-  return isVerified ? children : <Navigate to="/google" />;
+  return isVerified ? children : <Navigate to="/login" />;
 };
 
 export default PrivateRoute;

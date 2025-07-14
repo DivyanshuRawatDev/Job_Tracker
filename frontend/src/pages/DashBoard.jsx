@@ -39,6 +39,7 @@ const DashBoard = () => {
       .unwrap()
       .then(() => {
         navigate("/login");
+        localStorage.clear();
       })
       .catch((err) => {
         console.log(err.message);
