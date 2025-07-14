@@ -6,6 +6,7 @@ import { fetchGoogleAuth } from "../redux/slices/userSlice";
 import { useNavigate } from "react-router";
 import API from "../utils/axios";
 import { getRedirectResult } from "firebase/auth";
+import { auth } from "../utils/firebase";
 
 const Auth = () => {
   const dispatch = useDispatch();
