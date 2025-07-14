@@ -52,7 +52,7 @@ const Chat = () => {
         </div>
       </div>
       <div className="bg-green-50 h-[calc(100vh-78px)]  flex">
-        <div className="bg-blue-100 w-2/6 flex flex-col  gap-5 p-2">
+        <div className="bg-blue-100 w-2/6 flex flex-col overflow-y-auto p-6  gap-5">
           {conversation.allUsersWithoutCurrentUser?.length > 0 &&
             conversation.allUsersWithoutCurrentUser?.map((item) => {
               return (

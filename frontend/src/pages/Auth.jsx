@@ -3,17 +3,21 @@ import authImage from "../assets/auth.png";
 import googleLogo from "../assets/google.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchGoogleAuth } from "../redux/slices/userSlice";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation, Link } from "react-router";
 import API from "../utils/axios";
-import { getRedirectResult } from "firebase/auth";
-import { auth } from "../utils/firebase";
+import Signup from "../components/auth/Signup";
+import Login from "../components/auth/Login";
+
+
 
 const Auth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isVerified, setIsVerified] = useState(null);
   const { isLoading } = useSelector((store) => store.user);
   console.log(isLoading, "load");
+
   const handleGoogleLogin = async () => {
     try {
       const result = await dispatch(fetchGoogleAuth()).unwrap();
@@ -41,18 +45,6 @@ const Auth = () => {
     checkAuth();
   }, []);
 
-  useEffect(() => {
-    const checkRedirectResult = async () => {
-      const result = await getRedirectResult(auth);
-      if (result) {
-        const idToken = await result.user.getIdToken();
-        const response = await API.post("auth/google", { idToken });
-        console.log("Redirect login success:", response.data);
-        navigate("/dashboard");
-      }
-    };
-    checkRedirectResult();
-  }, []);
   return (
     <div className="flex flex-col md:flex-row h-screen items-stretch">
       {/* Left Image Section */}
@@ -63,21 +55,35 @@ const Auth = () => {
       {/* Vertical Line */}
       <div className="md:w-[1px] bg-gray-300 h-0.5 md:h-[90vh] flex  m-10 md:m-auto" />
 
-      {/* Right Login Section */}
+      {/* Right Section */}
       <div className="md:w-1/2 flex flex-col gap-8 justify-center items-center px-8">
         <div className="text-center">
           <h2 className="text-4xl font-extrabold">WELCOME</h2>
           <h1 className="text-4xl font-extrabold">JOB SEEKER</h1>
         </div>
-        <div className="text-center">
-          <p className="max-w-lg">
-            This platform helps you efficiently manage your job applications.
-            Log in to add, update, and track the status of your job prospects
-            all in one organized place. Stay focused and take control of your
-            career journey.
-          </p>
-        </div>
 
+     
+        {location.pathname === "/signup" ? <Signup /> : <Login />}
+
+        <p className="text-gray-500">
+          {location.pathname === "/signup" ? (
+            <>
+              Already have an account?{" "}
+              <Link to="/login" className="text-blue-600">
+                Login
+              </Link>
+            </>
+          ) : (
+            <>
+              Don’t have an account?{" "}
+              <Link to="/signup" className="text-blue-600">
+                Signup
+              </Link>
+            </>
+          )}
+        </p>
+
+        {/* Google Login Button */}
         <button
           onClick={handleGoogleLogin}
           disabled={isLoading}

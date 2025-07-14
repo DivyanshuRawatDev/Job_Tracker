@@ -38,7 +38,7 @@ const DashBoard = () => {
     dispatch(fetchUserLogout())
       .unwrap()
       .then(() => {
-        navigate("/google");
+        navigate("/login");
       })
       .catch((err) => {
         console.log(err.message);

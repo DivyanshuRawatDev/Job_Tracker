@@ -2,39 +2,56 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import API from "../../utils/axios";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../../utils/firebase";
-import {
-  setPersistence,
-  signInWithRedirect,
-  browserLocalPersistence,
-  getRedirectResult,
-} from "firebase/auth";
+
+
+export const fetchUserSignup = createAsyncThunk(
+  "auth/signup",
+  async function ({ name, email, password }) {
+    try {
+      const result = await API.post("auth/signup", {
+        name,
+        email,
+        password,
+      });
+      return result.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+export const fetchUserLogin = createAsyncThunk(
+  "auth/login",
+  async function ({ email, password }) {
+    try {
+      const result = await API.post("auth/login", {
+        email,
+        password,
+      });
+      return result.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
 
 export const fetchGoogleAuth = createAsyncThunk(
   "auth/google",
   async function () {
     try {
-      await setPersistence(auth, browserLocalPersistence);
-
-      // Try popup first
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
-      console.log(idToken, "token");
+      console.log(idToken,"token")
 
       const response = await API.post("auth/google", {
         idToken,
       });
 
-      console.log(response.data, "Login success (popup)");
+      console.log(response.data, "Asd");
+
       return response.data;
-
     } catch (error) {
-      console.warn("Popup failed, falling back to redirect...", error.message);
-
-      // Fallback to redirect
-      await signInWithRedirect(auth, provider);
-
-      // 🚨 Don’t return anything here because user is now redirected
-      return;
+      console.log("Error while fetch google Auth : " + error.message);
     }
   }
 );
@@ -42,7 +59,7 @@ export const fetchGoogleAuth = createAsyncThunk(
 
 export const fetchUserLogout = createAsyncThunk(
   "auth/logout",
-  async function (req, res) {
+  async function () {
     try {
       const response = await API.get("auth/logout");
       return response.data;
@@ -76,12 +93,40 @@ const userSlice = createSlice({
       state.isError = true;
     });
 
+    // Signup
+    builder.addCase(fetchUserSignup.pending, (state) => {
+      state.isLoading = true;
+      state.isError = false;
+    });
+    builder.addCase(fetchUserSignup.fulfilled, (state) => {
+      state.isLoading = false;
+      // state.user = action.payload.data;
+    });
+    builder.addCase(fetchUserSignup.rejected, (state) => {
+      state.isLoading = false;
+      state.isError = true;
+    });
+
+    // Login
+    builder.addCase(fetchUserLogin.pending, (state) => {
+      state.isLoading = true;
+      state.isError = false;
+    });
+    builder.addCase(fetchUserLogin.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.user = action.payload.data;
+    });
+    builder.addCase(fetchUserLogin.rejected, (state) => {
+      state.isLoading = false;
+      state.isError = true;
+    });
+
     // Logout
     builder.addCase(fetchUserLogout.pending, (state) => {
       state.isLoading = true;
       state.isError = false;
     });
-    builder.addCase(fetchUserLogout.fulfilled, (state, action) => {
+    builder.addCase(fetchUserLogout.fulfilled, (state) => {
       state.isLoading = false;
       state.user = {};
     });

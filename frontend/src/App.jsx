@@ -10,29 +10,30 @@ function App() {
     <>
       <div className="bg-gradient-to-r from-gray-900 via-transparent to-gray-900 flex items-center h-[100vh]">
         <div className="container mt-[5%]">
-          <div>
-            <Routes>
-              <Route path="/google" element={<Auth />} />
-              <Route path="/" element={<Navigate to="/google" replace />} />
-              <Route
-                path="/dashboard"
-                element={
-                  <PrivateRoute>
-                    <DashBoard />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/chat"
-                element={
-                  <PrivateRoute>
-                    <Chat />
-                  </PrivateRoute>
-                }
-              />
-              {/* <Route path="*" element={<NotFound />} /> */}
-            </Routes>
-          </div>
+          <Routes>
+            <Route path="/" element={<Navigate to="/login" replace />} />
+
+            <Route path="/login" element={<Auth />} />
+            <Route path="/signup" element={<Auth />} />
+
+            {/* Protected routes */}
+            <Route
+              path="/dashboard"
+              element={
+                <PrivateRoute>
+                  <DashBoard />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/chat"
+              element={
+                <PrivateRoute>
+                  <Chat />
+                </PrivateRoute>
+              }
+            />
+          </Routes>
         </div>
       </div>
     </>
