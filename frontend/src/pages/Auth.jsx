@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchGoogleAuth } from "../redux/slices/userSlice";
 import { useNavigate } from "react-router";
 import API from "../utils/axios";
+import { getRedirectResult } from "firebase/auth";
 
 const Auth = () => {
   const dispatch = useDispatch();
@@ -39,6 +40,18 @@ const Auth = () => {
     checkAuth();
   }, []);
 
+  useEffect(() => {
+    const checkRedirectResult = async () => {
+      const result = await getRedirectResult(auth);
+      if (result) {
+        const idToken = await result.user.getIdToken();
+        const response = await API.post("auth/google", { idToken });
+        console.log("Redirect login success:", response.data);
+        navigate("/dashboard");
+      }
+    };
+    checkRedirectResult();
+  }, []);
   return (
     <div className="flex flex-col md:flex-row h-screen items-stretch">
       {/* Left Image Section */}

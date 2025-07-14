@@ -2,7 +2,12 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import API from "../../utils/axios";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../../utils/firebase";
-import { setPersistence, browserLocalPersistence } from "firebase/auth";
+import {
+  setPersistence,
+  signInWithRedirect,
+  browserLocalPersistence,
+  getRedirectResult,
+} from "firebase/auth";
 
 export const fetchGoogleAuth = createAsyncThunk(
   "auth/google",
@@ -23,6 +28,8 @@ export const fetchGoogleAuth = createAsyncThunk(
       return response.data;
     } catch (error) {
       console.log("Error while fetch google Auth : " + error.message);
+      await signInWithRedirect(auth, provider);
+      return;
     }
   }
 );
