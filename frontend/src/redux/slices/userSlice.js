@@ -15,6 +15,7 @@ export const fetchGoogleAuth = createAsyncThunk(
     try {
       await setPersistence(auth, browserLocalPersistence);
 
+      // Try popup first
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
       console.log(idToken, "token");
@@ -23,16 +24,21 @@ export const fetchGoogleAuth = createAsyncThunk(
         idToken,
       });
 
-      console.log(response.data, "Asd");
-
+      console.log(response.data, "Login success (popup)");
       return response.data;
+
     } catch (error) {
-      console.log("Error while fetch google Auth : " + error.message);
+      console.warn("Popup failed, falling back to redirect...", error.message);
+
+      // Fallback to redirect
       await signInWithRedirect(auth, provider);
+
+      // 🚨 Don’t return anything here because user is now redirected
       return;
     }
   }
 );
+
 
 export const fetchUserLogout = createAsyncThunk(
   "auth/logout",
