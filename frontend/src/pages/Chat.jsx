@@ -27,6 +27,7 @@ const Chat = () => {
     });
 
     return () => {
+      socket.emit('disconnectUser',user._id)
       socket.disconnect();
     };
   }, [user._id]);
