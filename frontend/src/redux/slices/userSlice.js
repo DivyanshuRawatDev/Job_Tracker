@@ -6,12 +6,13 @@ import { auth, provider } from "../../utils/firebase";
 
 export const fetchUserSignup = createAsyncThunk(
   "auth/signup",
-  async function ({ name, email, password }) {
+  async function ({ name, email, password,gender }) {
     try {
       const result = await API.post("auth/signup", {
         name,
         email,
         password,
+        gender
       });
       return result.data;
     } catch (error) {
