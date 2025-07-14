@@ -28,6 +28,14 @@ const initilizedSocket = (server) => {
       io.emit("getOnlineUsers", onlineUsers);
     });
 
+    socket.on("disconnectUser", (userID) => {
+      if (onlineUsers[userID]) {
+        delete onlineUsers[userID];
+        console.log(`User ${userID} forced offline`);
+        io.emit("getOnlineUsers", onlineUsers);
+      }
+    });
+
     socket.on("typing", ({ roomID, senderID }) => {
       socket.to(roomID).emit("typing", { senderID });
     });
