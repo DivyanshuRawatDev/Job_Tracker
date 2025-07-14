@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import API from "../../utils/axios";
 import { joinRoom, socket } from "../../utils/socket";
 
-import  TypingGif from "../../assets/typing.gif"
+import TypingGif from "../../assets/typing.gif";
 
 const SideBarChat = ({ selectedUser }) => {
   const { user } = useSelector((store) => store.user);
@@ -112,6 +112,16 @@ const SideBarChat = ({ selectedUser }) => {
     };
   }, [selectedUser._id]);
 
+  useEffect(() => {
+    if (isTyping) {
+      requestAnimationFrame(() => {
+        scrollToBottom();
+      });
+    }
+  }, [isTyping]);
+  
+  
+
   return (
     <div className="flex flex-col p-1 bg-blue-100  h-full">
       <div className="bg-green-400 h-[10%] flex items-center gap-5 p-1">
@@ -131,7 +141,7 @@ const SideBarChat = ({ selectedUser }) => {
       {/* chat bubble */}
 
       <div
-        className="bg-green-50 relative h-[77%] p-3 overflow-x-auto "
+        className="bg-green-50 relative h-[77%] p-3 overflow-y-auto "
         ref={chatContainerRef}
       >
         {!selectedUser && (
@@ -149,9 +159,7 @@ const SideBarChat = ({ selectedUser }) => {
               />
             );
           })}
-        {isTyping && (
-          <img src={TypingGif} width={60} alt="typing..."/>
-        )}
+        {isTyping && <img src={TypingGif} width={60} alt="typing..." />}
       </div>
       {/* chat input */}
       <div className="bg-green-400 h-[13%] p-2 flex flex-col justify-center w-full">
