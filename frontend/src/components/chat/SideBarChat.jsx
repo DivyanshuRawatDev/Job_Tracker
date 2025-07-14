@@ -4,8 +4,8 @@ import { useSelector } from "react-redux";
 import API from "../../utils/axios";
 import { joinRoom, socket } from "../../utils/socket";
 
-import TypingGif from "../../assets/typing.gif";
-
+import  TypingGif from "../../assets/typing.gif"
+let timer;
 const SideBarChat = ({ selectedUser }) => {
   const { user } = useSelector((store) => store.user);
   const [conversation, setConversation] = useState([]);
@@ -74,7 +74,7 @@ const SideBarChat = ({ selectedUser }) => {
   };
 
   //typing function
-  let timer;
+
   const debounceStopTyping = () => {
     clearTimeout(timer);
     timer = setTimeout(() => {
@@ -112,14 +112,11 @@ const SideBarChat = ({ selectedUser }) => {
     };
   }, [selectedUser._id]);
 
-  useEffect(() => {
-    if (isTyping) {
-      requestAnimationFrame(() => {
-        scrollToBottom();
-      });
+  useEffect(()=>{
+    if(isTyping){
+      scrollToBottom();
     }
-  }, [isTyping]);
-  
+  },[isTyping]);
   
 
   return (
@@ -141,7 +138,7 @@ const SideBarChat = ({ selectedUser }) => {
       {/* chat bubble */}
 
       <div
-        className="bg-green-50 relative h-[77%] p-3 overflow-y-auto "
+        className="bg-green-50 relative h-[77%] p-3 overflow-x-auto "
         ref={chatContainerRef}
       >
         {!selectedUser && (
@@ -159,7 +156,9 @@ const SideBarChat = ({ selectedUser }) => {
               />
             );
           })}
-        {isTyping && <img src={TypingGif} width={60} alt="typing..." />}
+        {isTyping && (
+          <img src={TypingGif} width={55} alt="typing..."/>
+        )}
       </div>
       {/* chat input */}
       <div className="bg-green-400 h-[13%] p-2 flex flex-col justify-center w-full">
