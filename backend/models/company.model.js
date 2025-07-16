@@ -12,6 +12,22 @@ const companySchema = mongoose.Schema(
       required: true,
       default: "Pending",
     },
+    notificationRejected: {
+      type: Boolean,
+      default: false,
+    },
+    followUpNotified: {
+      type: Boolean,
+      default: false,
+    },
+    followUpCount: {
+      type: Number,
+      default: 0,
+    },
+    lastFollowUpAt: {
+      type: Date,
+      default: null,
+    },
     about: { type: String, required: true },
   },
   {

@@ -2,6 +2,7 @@ const { UserModel } = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { admin } = require("../utils/firebase");
+const { CompanyModel } = require("../models/company.model");
 
 const userSignup = async (req, res) => {
   try {

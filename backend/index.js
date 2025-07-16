@@ -1,10 +1,12 @@
 const express = require("express");
 require("dotenv").config({});
 const { connection } = require("./database/db");
+require("./cron/notification");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const http = require("http");
 const userAuthRoute = require("./routes/user.routes");
+const notificationRoutes = require("./routes/notification.routes");
 const companyRoutes = require("./routes/company.routes");
 const conversationRoute = require("./routes/conversation.routes");
 const messageRoute = require("./routes/message.routes");
@@ -30,6 +32,7 @@ app.use("/api/auth", userAuthRoute);
 app.use("/api/company", authorization, companyRoutes);
 app.use("/api", authorization, conversationRoute);
 app.use("/api", authorization, messageRoute);
+app.use("/api",authorization,notificationRoutes);
 
 //test
 app.get("/", authorization, (req, res) => {
