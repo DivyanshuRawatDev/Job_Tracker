@@ -1,14 +1,14 @@
 import { io } from "socket.io-client";
 
-// const socket = io("https://job-tracker-zulr.onrender.com", {
-//   transports: ["websocket"],
-//   withCredentials: true,
-// });
-
-const socket = io("http://localhost:8080", {
+const socket = io("https://job-tracker-zulr.onrender.com", {
   transports: ["websocket"],
   withCredentials: true,
 });
+
+// const socket = io("http://localhost:8080", {
+//   transports: ["websocket"],
+//   withCredentials: true,
+// });
 
 socket.on("connect", () => {
   console.log("Socket connected:", socket.id);

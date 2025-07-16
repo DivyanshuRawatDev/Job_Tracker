@@ -5,6 +5,11 @@ const companySchema = mongoose.Schema(
     companyName: { type: String, required: true },
     designation: { type: String, required: true },
     appliedFrom: { type: String, required: true },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     contact: { type: String },
     status: {
       type: String,

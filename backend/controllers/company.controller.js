@@ -17,6 +17,7 @@ const addNewCompanyDetails = async (req, res) => {
 
     const newCompany = await CompanyModel.create({
       companyName,
+      userId:req.userId,
       designation,
       appliedFrom,
       contact,

@@ -4,6 +4,7 @@ const userFollowupNotification = async (req, res) => {
   try {
     const notifications = await CompanyModel.find({
       followUpNotified: true,
+      userId: req.userId,
       notificationRejected: false,
     }).sort({ createdAt: -1 });
 
