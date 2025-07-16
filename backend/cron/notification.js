@@ -4,10 +4,11 @@ const { CompanyModel } = require("../models/company.model");
 cron.schedule("* * * * *", async () => {
   console.log("Running follow-up notification");
 
-  const fourDaysAgo = new Date(Date.now() - 60 * 1000);
+  const fourDaysAgo = new Date(Date.now() - 4 * 24 * 60 * 60 * 1000);
 
   const pendingCompanies = await CompanyModel.find({
     status: "Pending",
+
     createdAt: { $lte: fourDaysAgo },
     notificationRejected: false,
     followUpNotified: false,
