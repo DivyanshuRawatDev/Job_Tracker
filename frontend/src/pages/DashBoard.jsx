@@ -6,7 +6,7 @@ import CompanyAdd from "../components/dashboard/CompanyAdd";
 import { fetchUserLogout } from "../redux/slices/userSlice";
 import { useNavigate } from "react-router";
 import ChatImage from "../assets/chat.svg";
-
+import Notification from "../components/notification/Notification";
 
 const DashBoard = () => {
   const dispatch = useDispatch();
@@ -28,8 +28,6 @@ const DashBoard = () => {
     dispatch(fetchAllCompanies());
   }, []);
 
-  
-
   const handleLogoutBtn = () => {
     setShowlogout(!showLogout);
   };
@@ -46,8 +44,6 @@ const DashBoard = () => {
       });
   };
 
-  
-
   const handleShowAddCompany = () => {
     setShowAddCompany(!showAddCompany);
   };
@@ -57,6 +53,9 @@ const DashBoard = () => {
       <div className="flex justify-between items-center p-5">
         <h1 className="font-extrabold  text-3xl">JOB TRACKER</h1>
         <div className="flex items-center gap-5">
+          <div className="cursor-pointer">
+            <Notification />
+          </div>
           <div
             className="cursor-pointer"
             onClick={() => {

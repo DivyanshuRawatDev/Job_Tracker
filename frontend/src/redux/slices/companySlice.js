@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import API from "../../utils/axios";
+import { fetchRejectNotification } from "./notificationSlice";
 
 export const fetchAllCompanies = createAsyncThunk(
   "company/getAll",
@@ -111,12 +112,23 @@ const companySlice = createSlice({
       state.isLoading = false;
       const updatedCompany = action.payload?.data;
       state.companies = state.companies.filter((company) => {
-        return company._id !== updatedCompany._id 
+        return company._id !== updatedCompany._id;
       });
     });
     builder.addCase(fetchDeleteCompany.rejected, (state) => {
       state.isLoading = false;
       state.isError = true;
+    });
+
+    // handle reject notification
+    builder.addCase(fetchRejectNotification.fulfilled, (state, action) => {
+      const updatedCompany = action.payload?.data;
+
+      state.companies = state.companies.map((company) =>
+        company._id === updatedCompany._id
+          ? { ...company, status: "Rejected" }
+          : company
+      );
     });
   },
 });

@@ -2,6 +2,7 @@ import React from "react";
 import crossBtn from "../../assets/cross.svg"
 const Popup = ({ showPopup, closePopup, data }) => {
   if (!showPopup) return null;
+  const date = data.createdAt.split("T")[0];
 
   return (
     <div
@@ -16,6 +17,10 @@ const Popup = ({ showPopup, closePopup, data }) => {
         <div className="mb-4">
           <h2 className="text-xl  font-semibold">Designation :- </h2>
           <p>{data?.designation}</p>
+        </div>
+        <div className="mb-4">
+          <h2 className="text-xl font-semibold">Date :- </h2>
+          <p>{date}</p>
         </div>
         <div className="mb-4">
           <h2 className="text-xl font-semibold">Applied From :- </h2>
