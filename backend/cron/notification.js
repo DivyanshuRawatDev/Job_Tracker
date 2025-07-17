@@ -1,7 +1,7 @@
 const cron = require("node-cron");
 const { CompanyModel } = require("../models/company.model");
 
-cron.schedule("* * * * *", async () => {
+cron.schedule("0 0 * * *", async () => {
   console.log("Running follow-up notification");
 
   const fourDaysAgo = new Date(Date.now() - 4 * 24 * 60 * 60 * 1000);

@@ -5,6 +5,8 @@ const {
   googleAuthLogin,
   authVerify,
   userLogout,
+  sendOTP,
+  verifyOTP
 } = require("../controllers/user.controller");
 const { authorization } = require("../middlewares/authorization");
 
@@ -14,6 +16,8 @@ route.post("/signup", userSignup);
 route.post("/login", userLogin);
 route.post("/google", googleAuthLogin);
 route.get("/verify", authorization, authVerify);
-route.get("/logout", userLogout);
+route.get("/logout",authorization, userLogout);
+route.post("/send-otp",sendOTP);
+route.post("/verify-otp",verifyOTP);
 
 module.exports = route;

@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { admin } = require("../utils/firebase");
 const { CompanyModel } = require("../models/company.model");
+const { transporter } = require("../utils/nodemailer");
 
 const userSignup = async (req, res) => {
   try {
@@ -68,6 +69,13 @@ const userLogin = async (req, res) => {
 
     const decodedPassword = await bcrypt.compare(password, user.password);
 
+    if (!user.isVerified) {
+      return res.status(200).json({
+        message: "Please verify your email first.",
+        redirectTo: "/otp-verify",
+      });
+    }
+
     if (!decodedPassword) {
       res.status(400).json({ message: "Wrong credentials" });
     }
@@ -98,6 +106,7 @@ const googleAuthLogin = async (req, res) => {
     const { idToken } = req.body;
 
     const decodedToken = await admin.auth().verifyIdToken(idToken);
+
     const { uid, email, name, picture } = decodedToken;
 
     let user = await UserModel.findOne({ email });
@@ -153,10 +162,73 @@ const userLogout = async (req, res) => {
   }
 };
 
+const sendOTP = async (req, res) => {
+  const generateOTP = () =>
+    Math.floor(100000 + Math.random() * 900000).toString();
+
+  try {
+    const { email } = req.body;
+
+    if (!email) return res.status(400).json({ message: "Email required" });
+    const otp = generateOTP();
+
+    const user = await UserModel.findOne({ email });
+
+    if (!user) {
+      return res.json({ message: "User not found" });
+    }
+
+    user.otp = otp;
+    user.otpExpiresAt = Date.now() + 5 * 60 * 1000; // 5 min validity
+    user.isVerified = false;
+    await user.save();
+
+    await transporter.sendMail({
+      from: `"Job Tracker" <divyanshurawattest@gmail.com>`,
+      to: user?.email,
+      subject: "Your OTP for Job Tracker",
+      text: `Your OTP is ${otp}. It will expire in 5 minutes.`,
+    });
+
+    console.log(`Generated OTP for ${email}: ${otp}`);
+
+    return res.status(200).json({ message: "OTP sent successfully" });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const verifyOTP = async (req, res) => {
+  try {
+    const { otp, email } = req.body;
+
+    const user = await UserModel.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    if (user.otp !== otp) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    user.isVerified = true;
+    user.otp = "";
+
+    await user.save();
+
+    return res.status(200).json({ message: "OTP Verified Successfully" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   userSignup,
   userLogin,
   googleAuthLogin,
   authVerify,
   userLogout,
+  sendOTP,
+  verifyOTP,
 };
