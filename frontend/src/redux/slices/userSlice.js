@@ -3,16 +3,15 @@ import API from "../../utils/axios";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../../utils/firebase";
 
-
 export const fetchUserSignup = createAsyncThunk(
   "auth/signup",
-  async function ({ name, email, password,gender }) {
+  async function ({ name, email, password, gender }) {
     try {
       const result = await API.post("auth/signup", {
         name,
         email,
         password,
-        gender
+        gender,
       });
       return result.data;
     } catch (error) {
@@ -42,7 +41,7 @@ export const fetchGoogleAuth = createAsyncThunk(
     try {
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
-      console.log(idToken,"token")
+      console.log(idToken, "token");
 
       const response = await API.post("auth/google", {
         idToken,
@@ -57,7 +56,6 @@ export const fetchGoogleAuth = createAsyncThunk(
   }
 );
 
-
 export const fetchUserLogout = createAsyncThunk(
   "auth/logout",
   async function () {
@@ -70,12 +68,36 @@ export const fetchUserLogout = createAsyncThunk(
   }
 );
 
+export const fetchSendOTP = createAsyncThunk(
+  "auth/otp",
+  async function ({ email }) {
+    try {
+      const response = await API.post("auth/send-otp", { email });
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+export const fetchVerifyOTP = createAsyncThunk(
+  "auth/otp",
+  async function ({ email, otp }) {
+    try {
+      const response = await API.post("auth/verify-otp", { email, otp });
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState: {
     isLoadingGoogle: false,
     isLoadingSignup: false,
-    isLoadingLogin:false,
+    isLoadingLogin: false,
     isError: false,
     user: {},
   },
@@ -101,9 +123,9 @@ const userSlice = createSlice({
       state.isLoadingSignup = true;
       state.isError = false;
     });
-    builder.addCase(fetchUserSignup.fulfilled, (state) => {
+    builder.addCase(fetchUserSignup.fulfilled, (state, action) => {
       state.isLoadingSignup = false;
-      // state.user = action.payload.data;
+      state.user = action.payload.data;
     });
     builder.addCase(fetchUserSignup.rejected, (state) => {
       state.isLoadingSignup = false;

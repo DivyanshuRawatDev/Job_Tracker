@@ -4,6 +4,7 @@ import Auth from "./pages/Auth";
 import { Routes, Route, Navigate } from "react-router";
 import DashBoard from "./pages/DashBoard";
 import Chat from "./pages/Chat";
+import OTPVerify from "./components/OTPVerify";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
 
             <Route path="/login" element={<Auth />} />
             <Route path="/signup" element={<Auth />} />
+            <Route path="/otp-verify" element={<OTPVerify />} />
 
             {/* Protected routes */}
             <Route

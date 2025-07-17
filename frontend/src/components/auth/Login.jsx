@@ -12,8 +12,13 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(fetchUserLogin(form)).unwrap();
-      navigate("/dashboard");
+      const res = await dispatch(fetchUserLogin(form)).unwrap();
+      if (res.redirectTo) {
+        navigate(res.redirectTo, { state: { email: form.email } });
+      } else {
+        localStorage.removeItem("pendingEmail");
+        navigate("/dashboard");
+      }
     } catch (err) {
       console.error("Login failed:", err);
     }

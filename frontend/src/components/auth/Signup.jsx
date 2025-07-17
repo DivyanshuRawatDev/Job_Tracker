@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserSignup } from "../../redux/slices/userSlice";
+import { fetchSendOTP, fetchUserSignup } from "../../redux/slices/userSlice";
 import { useNavigate } from "react-router";
 
 const Signup = () => {
@@ -17,9 +17,18 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(fetchUserSignup(form)).unwrap();
-      setForm({ name: "", email: "", password: "", gender: "" });
-      navigate("/login");
+      await dispatch(fetchUserSignup(form))
+        .unwrap()
+        .then(() => {
+          dispatch(fetchSendOTP({ email: form.email }));
+          setForm({ name: "", email: "", password: "", gender: "" });
+          localStorage.setItem("pendingEmail", JSON.stringify({ email: form.email }));
+
+          navigate("/otp-verify");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } catch (err) {
       console.error("Signup failed:", err);
     }
