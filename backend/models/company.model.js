@@ -17,6 +17,7 @@ const companySchema = mongoose.Schema(
       required: true,
       default: "Pending",
     },
+    starWishList: { type: Boolean, default: false },
     notificationRejected: {
       type: Boolean,
       default: false,

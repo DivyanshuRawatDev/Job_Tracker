@@ -17,7 +17,7 @@ const addNewCompanyDetails = async (req, res) => {
 
     const newCompany = await CompanyModel.create({
       companyName,
-      userId:req.userId,
+      userId: req.userId,
       designation,
       appliedFrom,
       contact,
@@ -94,9 +94,29 @@ const updateCompanyStatus = async (req, res) => {
   }
 };
 
+const updateStarRating = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const company = await CompanyModel.findOne({ _id: id });
+    if (!company) {
+      return res.status(400).json({ message: "Invalid request" });
+    }
+
+    company.starWishList = !company.starWishList;
+    await company.save();
+    return res
+      .status(200)
+      .json({ message: "Star wishlist updated successfully", data: company });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   addNewCompanyDetails,
   deleteCompanyId,
   getAllCompanies,
   updateCompanyStatus,
+  updateStarRating,
 };

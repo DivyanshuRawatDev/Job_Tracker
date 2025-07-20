@@ -54,6 +54,17 @@ export const fetchDeleteCompany = createAsyncThunk(
   }
 );
 
+export const fetchStarWishlistStatus = createAsyncThunk(
+  "wishlist/update",
+  async function ({ id }) {
+    try {
+      const response = await API.patch(`company/update/star/${id}`);
+      return response.data;
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+);
 const companySlice = createSlice({
   name: "company",
   initialState: {
@@ -116,6 +127,21 @@ const companySlice = createSlice({
       });
     });
     builder.addCase(fetchDeleteCompany.rejected, (state) => {
+      state.isLoading = false;
+      state.isError = true;
+    });
+
+    //star rating data
+   
+    builder.addCase(fetchStarWishlistStatus.fulfilled, (state, action) => {
+      state.isLoading = false;
+      const updatedCompany = action.payload?.data;
+
+      state.companies = state.companies.map((company) =>
+        company._id === updatedCompany._id ? updatedCompany : company
+      );
+    });
+    builder.addCase(fetchStarWishlistStatus.rejected, (state) => {
       state.isLoading = false;
       state.isError = true;
     });

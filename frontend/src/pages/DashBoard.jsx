@@ -122,14 +122,19 @@ const DashBoard = () => {
               <p className="bg-red-300 md:w-[20%]  p-2 rounded-xl cursor-pointer">
                 Rejected
               </p>
+              <p className="bg-pink-400 md:w-[20%] p-2 rounded-xl cursor-pointer">
+                Wishlist
+              </p>
             </div>
             <div className=" flex  flex-col gap-4 p-4 max-h-[60vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400">
               {companies
-                .filter((company) =>
-                  currentStatus == "All"
-                    ? true
-                    : company.status === currentStatus
-                )
+                .filter((company) => {
+                  if (currentStatus == "All") return true;
+                  if (currentStatus == "Wishlist") {
+                    return company.starWishList === true;
+                  }
+                  return company.status === currentStatus;
+                })
                 .map((data) => {
                   return <JobCard key={data?._id} data={data} />;
                 })}
